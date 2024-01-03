@@ -28,18 +28,18 @@ while True:
     img = cv2.flip(img,1)
 
     # Redimensionner l'image
-    imgScaled = cv2.resize(img, (0, 0), None, 0.875, 0.875)
-    imgScaled = imgScaled[:, 80:480]
-
+    imgScaled = cv2.resize(img, (0, 0), None, 1, 0.63)
+    imgScaled = imgScaled[0:640, 0:480]
+    #  Pour gerer les deplacements val + alors vers le b (1er col); - vers le h (1er col); + vers la d (2eme col); - vers la g(2eme col)
     # Détecter les mains
     hands, img = detector.findHands(imgScaled)  # avec dessin
 
     # Si le jeu est démarré
-    if startGame & (scores[0]<5 or scores[1]<5) :
+    if startGame & (scores[0]<=5 or scores[1]<=5) :
         # Si le résultat n'est pas encore affiché
         if stateResult is False:
             timer = time.time() - initialTime
-            cv2.putText(imgBG, str(int(timer)), (605, 435), cv2.FONT_HERSHEY_PLAIN, 6, (255, 0, 255), 4)
+            cv2.putText(imgBG, str(int(timer)), (607, 460), cv2.FONT_HERSHEY_PLAIN, 6, (255, 0, 255), 6)
 
             # Si le timer dépasse 3 secondes, afficher le résultat
             if timer > 3:
@@ -63,7 +63,7 @@ while True:
                     # Générer un nombre aléatoire pour le mouvement de l'IA
                     randomNumber = random.randint(1, 3)
                     imgAI = cv2.imread(f'Resources/{randomNumber}.png', cv2.IMREAD_UNCHANGED)
-                    imgBG = overlayPNG(imgBG, imgAI, (149, 310))
+                    imgBG = overlayPNG(imgBG, imgAI, (149, 390))
 
                     # Si le joueur gagne
                     if (playerMove == 1 and randomNumber == 3) or \
@@ -76,17 +76,23 @@ while True:
                             (playerMove == 1 and randomNumber == 2) or \
                             (playerMove == 2 and randomNumber == 3):
                         scores[0] += 1
+    else : 
+        scores[0] = 0
+        scores[1] = 0
 
     # Superposer l'image de la webcam sur l'image de fond
-    imgBG[234:654, 795:1195] = imgScaled
+    region_height = imgScaled.shape[0]
+    bottom_position = 340  # Déplacer vers le bas de 5 pixels
+    right_position = 769   # Déplacer vers la droite de 10 pixels
+    imgBG[bottom_position:bottom_position + region_height, right_position:right_position + imgScaled.shape[1]] = imgScaled
 
     # Si le résultat est affiché, superposer l'image de l'IA
     if stateResult:
         imgBG = overlayPNG(imgBG, imgAI, (149, 310))
 
     # Afficher les scores
-    cv2.putText(imgBG, str(scores[0]), (410, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 6)
-    cv2.putText(imgBG, str(scores[1]), (1112, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 6)
+    cv2.putText(imgBG, str(scores[0]), (410, 250), cv2.FONT_HERSHEY_PLAIN, 4, (255, 0, 127), 6)
+    cv2.putText(imgBG, str(scores[1]), (1151, 250), cv2.FONT_HERSHEY_PLAIN, 4, (255, 0, 127), 6)
 
     # Afficher les images
     cv2.imshow("BG", imgBG)
