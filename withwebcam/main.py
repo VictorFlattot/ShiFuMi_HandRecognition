@@ -28,7 +28,7 @@ while True:
     img = cv2.flip(img,1)
 
     # Redimensionner l'image
-    imgScaled = cv2.resize(img, (0, 0), None, 0.875, 0.875)
+    imgScaled = cv2.resize(img, (0, 0), None, 0.875, 0.6)
     imgScaled = imgScaled[:, 80:480]
 
     # Détecter les mains
@@ -78,15 +78,16 @@ while True:
                         scores[0] += 1
 
     # Superposer l'image de la webcam sur l'image de fond
-    imgBG[234:654, 795:1195] = imgScaled
-
+    region_height = imgScaled.shape[0]
+    bottom_position = 338
+    imgBG[bottom_position:bottom_position + region_height, 795:1195] = imgScaled
     # Si le résultat est affiché, superposer l'image de l'IA
     if stateResult:
         imgBG = overlayPNG(imgBG, imgAI, (149, 310))
 
     # Afficher les scores
-    cv2.putText(imgBG, str(scores[0]), (410, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 6)
-    cv2.putText(imgBG, str(scores[1]), (1112, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 6)
+    cv2.putText(imgBG, str(scores[0]), (410, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 0, 127), 6)
+    cv2.putText(imgBG, str(scores[1]), (1112, 215), cv2.FONT_HERSHEY_PLAIN, 4, (255, 0, 127), 6)
 
     # Afficher les images
     cv2.imshow("BG", imgBG)
