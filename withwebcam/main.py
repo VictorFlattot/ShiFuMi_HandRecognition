@@ -23,7 +23,7 @@ scores = [0, 0]
 # Boucle principale
 while True:
     # Lire l'image de la webcam
-    imgBG = cv2.imread("withwebcam/Resources/Background.png")
+    imgBG = cv2.imread("Resources/Background.png")
     success, img = cap.read()
     img = cv2.flip(img,1)
 
@@ -62,7 +62,7 @@ while True:
 
                     # Générer un nombre aléatoire pour le mouvement de l'IA
                     randomNumber = random.randint(1, 3)
-                    imgAI = cv2.imread(f'withwebcam/Resources/{randomNumber}.png', cv2.IMREAD_UNCHANGED)
+                    imgAI = cv2.imread(f'Resources/{randomNumber}.png', cv2.IMREAD_UNCHANGED)
                     imgBG = overlayPNG(imgBG, imgAI, (149, 310))
 
                     # Si le joueur gagne
@@ -76,9 +76,6 @@ while True:
                             (playerMove == 1 and randomNumber == 2) or \
                             (playerMove == 2 and randomNumber == 3):
                         scores[0] += 1
-    else : 
-        scores[0] = 0
-        scores[1] = 0
 
     # Superposer l'image de la webcam sur l'image de fond
     region_height = imgScaled.shape[0]
@@ -103,3 +100,7 @@ while True:
         startGame = True
         initialTime = time.time()
         stateResult = False
+    if key == ord('q'):
+        cap.release()
+        cv2.destroyAllWindows()
+        break
