@@ -44,8 +44,7 @@ class GameView:
             aiMove (int): Le mouvement de l'IA, utilisé pour sélectionner l'image correspondante.
         """
         if stateResult:
-            print(aiMove)
-            imgAI = cv2.imread(f'{self.resource_path}/{aiMove}.png', cv2.IMREAD_UNCHANGED)
+            imgAI = cv2.imread(f'../{self.resource_path}/{aiMove}.png', cv2.IMREAD_UNCHANGED)
             overlayPNG(self.imgBG, imgAI, (149, 340))
 
     def show_timer(self, timer):

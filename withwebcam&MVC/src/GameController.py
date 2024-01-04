@@ -79,7 +79,7 @@ class GameController:
             if self.startGame \
                     and (self.model.scores[0] <= 4 and self.model.scores[1] <= 4) \
                     and time.time() > self.nextRoundTime:
-                self.view.reset_background("Resources/Background.png")
+                self.view.reset_background("../Resources/Background.png")
 
                 if not self.stateResult:
                     # Mise à jour et affichage du timer
