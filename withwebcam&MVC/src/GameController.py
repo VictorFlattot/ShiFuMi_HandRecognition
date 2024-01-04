@@ -8,6 +8,21 @@ from GameView import GameView  # Assurez-vous d'avoir implémenté GameView
 def interpret_player_move(fingers):
     """
     Interprète le mouvement du joueur en fonction des doigts levés.
+
+    Args:
+        fingers (list): Liste représentant les doigts levés (1) ou abaissés (0).
+
+    Returns:
+        int: Le mouvement du joueur (1 pour Pierre, 2 pour Papier, 3 pour Ciseaux) ou None si non reconnu.
+
+    >>> interpret_player_move([0, 0, 0, 0, 0]) # Tous les doigts abaissés, mouvement "Pierre"
+    1
+    >>> interpret_player_move([1, 1, 1, 1, 1]) # Tous les doigts levés, mouvement "Papier"
+    2
+    >>> interpret_player_move([0, 1, 1, 0, 0]) # Deux doigts levés, mouvement "Ciseaux"
+    3
+    >>> interpret_player_move([1, 0, 1, 1, 1]) is None # Mouvement non reconnu
+    True
     """
     if fingers == [0, 0, 0, 0, 0]:
         return 1  # Pierre
@@ -15,14 +30,18 @@ def interpret_player_move(fingers):
         return 2  # Papier
     elif fingers == [0, 1, 1, 0, 0]:
         return 3  # Ciseaux
-    else:
-        return None  # Mouvement non reconnu ou aucun mouvement
+
+    return None  # Mouvement non reconnu ou aucun mouvement
 
 
 class GameController:
+    """
+    Initialise une nouvelle instance de GameController.
+    Configure la vue du jeu, le modèle, la détection des mains et la webcam.
+    """
     def __init__(self):
         self.model = GameModel()
-        self.view = GameView("Resources/Background.png", "Resources")
+        self.view = GameView("../Resources/Background.png", "Resources")
         self.detector = HandDetector(maxHands=1)
         self.startGame = False
         self.stateResult = False
@@ -35,6 +54,10 @@ class GameController:
         self.cap.set(4, 480)
 
     def run(self):
+        """
+        Lance et gère la boucle principale du jeu.
+        Traite la capture d'image, la détection des mains, la logique du jeu et l'affichage.
+        """
         while True:
             # Réinitialiser l'image de fond
 
@@ -98,13 +121,10 @@ class GameController:
         cv2.destroyAllWindows()
 
     def start_game(self):
+        """
+        Démarre le jeu en réinitialisant les variables de contrôle de l'état du jeu.
+        """
         self.startGame = True
         self.initialTime = time.time()
         self.stateResult = False
         self.nextRoundTime = 0  # Commence immédiatement la première manche
-
-
-
-if __name__ == "__main__":
-    controller = GameController()
-    controller.run()

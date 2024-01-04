@@ -6,20 +6,23 @@ import mediapipe as mp
 
 class HandDetector:
     """
-    Finds Hands using the mediapipe library. Exports the landmarks
-    in pixel format. Adds extra functionalities like finding how
-    many fingers are up or the distance between two fingers. Also
-    provides bounding box info of the hand found.
+    Détecte les mains à l'aide de la bibliothèque Mediapipe. Exporte les repères (landmarks)
+    au format pixel. Ajoute des fonctionnalités supplémentaires comme la détection du nombre de doigts levés
+    ou la mesure de la distance entre deux doigts. Fournit également des informations sur la boîte englobante (bounding box)
+    de la main détectée.
     """
 
     def __init__(self, staticMode=False, maxHands=2, modelComplexity=1, detectionCon=0.5, minTrackCon=0.5):
 
         """
-        :param mode: In static mode, detection is done on each image: slower
-        :param maxHands: Maximum number of hands to detect
-        :param modelComplexity: Complexity of the hand landmark model: 0 or 1.
-        :param detectionCon: Minimum Detection Confidence Threshold
-        :param minTrackCon: Minimum Tracking Confidence Threshold
+        Initialise l'objet HandDetector avec les paramètres spécifiés.
+
+        Args:
+            staticMode (bool): Si True, la détection est effectuée sur chaque image séparément (plus lent).
+            maxHands (int): Nombre maximal de mains à détecter.
+            modelComplexity (int): Complexité du modèle de repères de main (0 ou 1).
+            detectionCon (float): Seuil de confiance minimum pour la détection.
+            minTrackCon (float): Seuil de confiance minimum pour le suivi.
         """
         self.staticMode = staticMode
         self.maxHands = maxHands
@@ -40,10 +43,17 @@ class HandDetector:
 
     def findHands(self, img, draw=True, flipType=True):
         """
-        Finds hands in a BGR image.
-        :param img: Image to find the hands in.
-        :param draw: Flag to draw the output on the image.
-        :return: Image with or without drawings
+        Trouve les mains dans une image BGR et dessine éventuellement les repères et les boîtes englobantes.
+
+        Args:
+            img (numpy.ndarray): Image dans laquelle trouver les mains (format BGR).
+            draw (bool): Si True, dessine les repères et les boîtes englobantes sur l'image.
+            flipType (bool): Si True, inverse le type de main (gauche/droite) en fonction de la classification.
+
+        Returns :
+            list : Liste de dictionnaires contenant des informations sur les mains détectées.
+
+            Numpy.ndarray : Image avec ou sans dessins.
         """
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
@@ -97,9 +107,13 @@ class HandDetector:
 
     def fingersUp(self, myHand):
         """
-        Finds how many fingers are open and returns in a list.
-        Considers left and right hands separately
-        :return: List of which fingers are up
+        Détermine combien de doigts sont levés pour une main donnée.
+
+        Args:
+            myHand (dict): Dictionnaire contenant des informations sur la main.
+
+        Returns :
+            list : Liste indiquant quels doigts sont levés (1 pour levé, 0 pour baissé).
         """
         fingers = []
         myHandType = myHand["type"]
@@ -128,15 +142,21 @@ class HandDetector:
 
     def findDistance(self, p1, p2, img=None, color=(255, 0, 255), scale=5):
         """
-        Find the distance between two landmarks input should be (x1,y1) (x2,y2)
-        :param p1: Point1 (x1,y1)
-        :param p2: Point2 (x2,y2)
-        :param img: Image to draw output on. If no image input output img is None
-        :return: Distance between the points
-                 Image with output drawn
-                 Line information
-        """
+        Trouve la distance entre deux repères et dessine éventuellement sur une image.
+        Args:
+            p1 (tuple): Coordonnées du point 1 (x1, y1).
+            p2 (tuple): Coordonnées du point 2 (x2, y2).
+            img (numpy.ndarray): Image sur laquelle dessiner (facultatif).
+            color (tuple): Couleur pour le dessin (facultatif).
+            scale (int): Facteur d'échelle pour le dessin (facultatif).
 
+        Returns:
+            float: Distance entre les points.
+
+            Tuple : Informations sur les points et le centre.
+
+            Numpy.ndarray : Image avec le dessin (si fournie).
+        """
         x1, y1 = p1
         x2, y2 = p2
         cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
