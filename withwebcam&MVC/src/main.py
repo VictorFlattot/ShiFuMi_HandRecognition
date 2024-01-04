@@ -16,8 +16,4 @@ if __name__ == "__main__":
     Si ce script est exécuté comme programme principal (et non importé comme module), 
     il appelle la fonction main pour démarrer le jeu.
     """
-    # main()
-
-    import doctest
-
-    doctest.testmod()
+    main()
