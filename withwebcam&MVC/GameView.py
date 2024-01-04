@@ -37,29 +37,6 @@ class GameView:
         """
         cv2.putText(self.imgBG, str(int(timer)), (607, 460), cv2.FONT_HERSHEY_PLAIN, 6, (255, 0, 255), 6)
 
-    def overlay_png(self, background, overlay, position):
-        """
-        Superpose une image PNG sur le fond, en gérant la transparence.
-        """
-        x, y = position
-        h, w = overlay.shape[:2]
-
-        # Redimensionnement du fond pour correspondre à la taille de l'overlay
-        overlay_resized = cv2.resize(overlay, (w, h))
-
-        # Extraction des canaux alpha et RGB
-        alpha = overlay_resized[:, :, 3] / 255.0
-        overlay_rgb = overlay_resized[:, :, :3]
-
-        # Zone de fond où l'overlay sera placé
-        bg_region = background[y:y + h, x:x + w]
-
-        # Combinaison de l'overlay et du fond
-        result = cv2.addWeighted(overlay_rgb, alpha, bg_region, 1 - alpha, 0)
-
-        # Remplacement de la région du fond par le résultat
-        background[y:y + h, x:x + w] = result
-
     def show(self):
         """
         Affiche l'image finale dans la fenêtre de l'application.

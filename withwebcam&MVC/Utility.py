@@ -1,12 +1,3 @@
-"""
-
-"""
-
-import numpy as np
-
-
-
-
 def overlayPNG(imgBack, imgFront, pos=[0, 0]):
     """
      Overlay a PNG image with transparency onto another image using alpha blending.
