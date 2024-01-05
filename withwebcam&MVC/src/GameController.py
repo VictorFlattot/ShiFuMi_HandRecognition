@@ -39,6 +39,7 @@ class GameController:
     Initialise une nouvelle instance de GameController.
     Configure la vue du jeu, le modèle, la détection des mains et la webcam.
     """
+
     def __init__(self):
         self.model = GameModel()
         self.view = GameView("../Resources/Background.png", "Resources")
@@ -59,8 +60,6 @@ class GameController:
         Traite la capture d'image, la détection des mains, la logique du jeu et l'affichage.
         """
         while True:
-            # Réinitialiser l'image de fond
-
             success, img = self.cap.read()
             if not success:
                 break
@@ -70,15 +69,16 @@ class GameController:
             imgScaled = imgScaled[0:640, 0:480]
 
             hands, img = self.detector.findHands(imgScaled)  # avec dessin
-
             currentTime = time.time()
 
             if time.time() < self.nextRoundTime:
                 self.initialTime = time.time()
 
             if self.startGame \
-                    and (self.model.scores[0] <= 4 and self.model.scores[1] <= 4) \
+                    and (self.model.scores[0] <= 4
+                         and self.model.scores[1] <= 4) \
                     and time.time() > self.nextRoundTime:
+                # Réinitialiser l'image de fond
                 self.view.reset_background("../Resources/Background.png")
 
                 if not self.stateResult:
@@ -98,6 +98,9 @@ class GameController:
                         self.model.generate_ai_move()
                         self.view.show_game_result(self.stateResult, self.model.aiMove)
                         self.model.update_scores()
+                        if self.model.scores[0] == 5 or self.model.scores[1] == 5:
+                            self.startGame = False
+                            self.view.display_winner(self.model.get_scores())
 
                     self.nextRoundTime = time.time() + self.delayBetweenRounds
             else:
@@ -124,6 +127,7 @@ class GameController:
         """
         Démarre le jeu en réinitialisant les variables de contrôle de l'état du jeu.
         """
+        self.model.scores = [4, 4]
         self.startGame = True
         self.initialTime = time.time()
         self.stateResult = False

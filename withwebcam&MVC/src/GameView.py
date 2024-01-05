@@ -47,6 +47,17 @@ class GameView:
             imgAI = cv2.imread(f'../{self.resource_path}/{aiMove}.png', cv2.IMREAD_UNCHANGED)
             overlayPNG(self.imgBG, imgAI, (149, 340))
 
+    def display_winner(self, scores):
+        if scores[0] == 5 or scores[1] == 5:
+            winner_text = "Player" if scores[1] == 5 else "Computer"
+            cv2.putText(self.imgBG, 'Winner is', (570, 425), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 5)
+            cv2.putText(self.imgBG, winner_text, (571, 462), cv2.FONT_HERSHEY_PLAIN, 2, (0, 255, 0), 5)
+
+            # Charger et superposer l'image de confettis
+            confetti_img = cv2.imread(f'../{self.resource_path}/winner.png', cv2.IMREAD_UNCHANGED)
+            confetti_position = (250, 145) if winner_text == "Computer" else (969, 145)
+            self.imgBG = overlayPNG(self.imgBG, confetti_img, confetti_position)
+
     def show_timer(self, timer):
         """
         Affiche un compte à rebours sur l'écran.
