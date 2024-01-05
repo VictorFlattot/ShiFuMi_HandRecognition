@@ -48,7 +48,7 @@ class GameController:
         self.stateResult = False
         self.timer = 0
         self.initialTime = 0
-        self.delayBetweenRounds = 5  # Délai en secondes
+        self.delayBetweenRounds = 2  # Délai en secondes
         self.nextRoundTime = 0  # Moment où la prochaine manche doit commencer
         self.cap = cv2.VideoCapture(0)
         self.cap.set(3, 640)
@@ -127,7 +127,7 @@ class GameController:
         """
         Démarre le jeu en réinitialisant les variables de contrôle de l'état du jeu.
         """
-        self.model.scores = [4, 4]
+        self.model.scores = [0, 0]
         self.startGame = True
         self.initialTime = time.time()
         self.stateResult = False
