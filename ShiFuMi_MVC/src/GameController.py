@@ -100,6 +100,7 @@ class GameController:
                         self.model.update_scores()
                         if self.model.scores[0] == 5 or self.model.scores[1] == 5:
                             self.startGame = False
+                            self.view.reset_background("../Resources/Background.png")
                             self.view.display_winner(self.model.get_scores())
 
                     self.nextRoundTime = time.time() + self.delayBetweenRounds
@@ -127,7 +128,7 @@ class GameController:
         """
         Démarre le jeu en réinitialisant les variables de contrôle de l'état du jeu.
         """
-        self.model.scores = [0, 0]
+        self.model.scores = [4, 4]
         self.startGame = True
         self.initialTime = time.time()
         self.stateResult = False
